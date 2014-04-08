@@ -3,6 +3,7 @@ module SmswayApi
     attr_accessor :sender
 
     attr_reader :recepients
+    attr_reader :type
 
     TYPES = [:flashsms, :sms, :vcard, :wappush]
 

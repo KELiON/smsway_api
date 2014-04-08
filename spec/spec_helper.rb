@@ -1,1 +1,1 @@
-require 'smsway_api'
+require './lib/smsway_api.rb'
