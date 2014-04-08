@@ -2,13 +2,12 @@ module SmswayApi
   class Message::Sms < Message
     attr_accessor :message
 
-    def initialize(sender = nil, message= nil)
+    def initialize(message= nil)
       super(:sms)
-      @sender = sender
       @message = message
     end
 
-    def build(xml)
+    def build(xml, start_index = 0)
       super do |xml|
         xml.text @message
       end

@@ -2,12 +2,12 @@ module SmswayApi
   class Message::WapPush < Message
     attr_accessor :url
 
-    def initialize(sender = nil, url = nil)
+    def initialize(url = nil)
       super(:wappush)
       @url = url
     end
 
-    def build(xml)
+    def build(xml, start_index = 0)
       super do |xml|
         xml.url @url
       end

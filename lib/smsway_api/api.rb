@@ -9,12 +9,22 @@ module SmswayApi
         request({url: URL, headers: HEADERS, request: xml})
       end
 
-      def build method, options = {}
-        options = options.merge({
-          login: SmswayApi.login,
-          password: SmswayApi.password
-        })
-        ''
+      def send_messages messages = []
+        messages = Array.wrap(messages)
+        xml = Builder::XmlMarkup.new
+        xml.instruct!
+        xml.request do
+          abonents = 1
+          messages.each do |m|
+            m.build(xml, abonents)
+            abonents += m.recepients.size
+          end
+          xml.security do
+            xml.login(value: SmswayApi.login)
+            xml.password(value:  SmswayApi.password)
+          end
+        end
+        xml
       end
 
       def request(options = {})

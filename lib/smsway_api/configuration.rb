@@ -9,6 +9,7 @@ module SmswayApi
     OPTION_NAMES = [
       :login,
       :password,
+      :default_sender,
       :logger,
       :log_requests,
       :log_errors,

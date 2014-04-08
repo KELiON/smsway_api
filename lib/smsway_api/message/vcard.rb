@@ -23,7 +23,7 @@ module SmswayApi
       @vcard = vcard
     end
 
-    def build(xml)
+    def build(xml, start_index = 0)
       super do |xml|
         [:url, :name, :email, :position, :organization, :additional, :phone, :address].each do |key|
             if @vcard.has_key?(key)

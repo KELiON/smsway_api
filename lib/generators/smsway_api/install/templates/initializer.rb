@@ -1,7 +1,10 @@
 SmswayApi.configure do |config|
   # Authorization parameters
-  # config.login       = '123'
-  # config.password   = 'AbCdE654'
+  # config.login = '123'
+  # config.password = 'AbCdE654'
+
+  # set this to have persistent sender through your application
+  # config.default_sender = 'SMSWAY'
 
   # Logging parameters:
   # log everything through the rails logger
