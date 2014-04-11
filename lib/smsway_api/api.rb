@@ -1,7 +1,7 @@
 module SmswayApi
   module API
-    URL_PREFIX = 'http://my.smsway.ru'
-    HEADERS = {"Content-Type" => "text/xml; charset=utf-8"}
+    URL_PREFIX = 'http://my.smsway.ru/'
+    DEFAULT_HEADERS = {"Content-Type" => "text/xml; charset=utf-8"}
 
     class << self
       def call(method, options = {})
@@ -9,34 +9,28 @@ module SmswayApi
         request({url: URL, headers: HEADERS, request: xml})
       end
 
-      def send_messages messages = []
-        messages = Array.wrap(messages)
-        xml = Builder::XmlMarkup.new
-        xml.instruct!
-        xml.request do
-          abonents = 1
-          messages.each do |m|
-            m.build(xml, abonents)
-            abonents += m.recepients.size
-          end
-          xml.security do
-            xml.login(value: SmswayApi.login)
-            xml.password(value:  SmswayApi.password)
-          end
-        end
-        xml
+      def request options
+        headers = options.delete(:headers) || {}
+
+        uri = URI.parse(URL_PREFIX+options.delete(:path))
+        http = Net::HTTP.new(uri.host, uri.port)
+
+        req = Net::HTTP::Post.new(uri.path, DEFAULT_HEADERS.merge(headers))
+        req.body = options.delete(:request).target!
+        http.request(req).body
       end
 
-      def request(options = {})
-        path = options.delete(:path)
-        headers = options.delete(:headers)
-
-        uri = URI.parse(URL_PREFIX)
-        http = Net::HTTP.new(uri.host, uri.port)
-        req = Net::HTTP::Post.new(path, headers)
-        req.body = options.delete(:request)
-        response = http.request(req)
-        response.body
+      def method_missing name, *args
+        klass = "SmswayApi::Method::#{name.to_s.camelize}".constantize
+        method = klass.new(*args)
+        method.build_xml
+        response = request({
+          path: method.uri,
+          request: method.build_xml
+        })
+        method.parse(response)
+      rescue NameError
+        super
       end
     end
   end

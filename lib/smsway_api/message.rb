@@ -40,9 +40,15 @@ module SmswayApi
         # convert string value to correct hash
         recepient = {phone: recepient}
       end
+      recepient[:phone] = format_phone(recepient[:phone])
       @recepients.push(recepient)
       # time-send format: YYYY-MM-DD HH:MM
       # validity_period format: YYYY-MM-DD HH:MM
+    end
+
+    private
+    def format_phone phone
+      phone.gsub(/\A(\+7|8)/, '7').gsub(/[^\d]/, '')
     end
   end
 end
