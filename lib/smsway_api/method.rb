@@ -11,7 +11,7 @@ module SmswayApi
           xml.password(value:  SmswayApi.password)
         end
       end
-      xml
+      xml.target!
     end
 
     def parse_response response

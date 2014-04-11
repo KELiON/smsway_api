@@ -16,19 +16,18 @@ module SmswayApi
         http = Net::HTTP.new(uri.host, uri.port)
 
         req = Net::HTTP::Post.new(uri.path, DEFAULT_HEADERS.merge(headers))
-        req.body = options.delete(:request).target!
+        req.body = options.delete(:request)
         http.request(req).body
       end
 
       def method_missing name, *args
-        klass = "SmswayApi::Method::#{name.to_s.camelize}".constantize
-        method = klass.new(*args)
-        method.build_xml
+        api_method = "SmswayApi::Method::#{name.to_s.camelize}".constantize.new(*args)
+        api_method.build_xml
         response = request({
-          path: method.uri,
-          request: method.build_xml
+          path: api_method.uri,
+          request: api_method.build_xml
         })
-        method.parse(response)
+        api_method.parse(response)
       rescue NameError
         super
       end
