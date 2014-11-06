@@ -17,7 +17,14 @@ module SmswayApi
 
         req = Net::HTTP::Post.new(uri.path, DEFAULT_HEADERS.merge(headers))
         req.body = options.delete(:request)
-        http.request(req).body
+        response = http.request(req).body
+        if SmswayApi.log_requests
+          SmswayApi.logger.debug("[smswayapi] request \n #{req.body}")
+        end
+        if SmswayApi.log_responses
+          SmswayApi.logger.debug("[smswayapi] response \n #{response}")
+        end
+        response
       end
 
       def method_missing name, *args
