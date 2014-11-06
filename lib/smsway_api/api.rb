@@ -22,7 +22,9 @@ module SmswayApi
           SmswayApi.logger.debug("[smswayapi] request \n #{req.body}")
         end
         if SmswayApi.log_responses
-          SmswayApi.logger.debug("[smswayapi] response \n #{response}")
+          # hint to prevent "log writing failed. "\xD0" from ASCII-8BIT to UTF-8" error
+          debug_response = response.encode('utf-8', :invalid => :replace, :undef => :replace, :replace => '_')
+          SmswayApi.logger.debug("[smswayapi] response \n #{debug_response}")
         end
         response
       end
