@@ -17,14 +17,12 @@ module SmswayApi
 
         req = Net::HTTP::Post.new(uri.path, DEFAULT_HEADERS.merge(headers))
         req.body = options.delete(:request)
-        response = http.request(req).body
+        response = http.request(req).body.force_encoding("UTF-8")
         if SmswayApi.log_requests
           SmswayApi.logger.debug("[smswayapi] request \n #{req.body}")
         end
         if SmswayApi.log_responses
-          # hint to prevent "log writing failed. "\xD0" from ASCII-8BIT to UTF-8" error
-          debug_response = response.encode('utf-8', :invalid => :replace, :undef => :replace, :replace => '_')
-          SmswayApi.logger.debug("[smswayapi] response \n #{debug_response}")
+          SmswayApi.logger.debug("[smswayapi] response \n #{response}")
         end
         response
       end
